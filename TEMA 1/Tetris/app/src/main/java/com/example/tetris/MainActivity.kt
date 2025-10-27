@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,51 +16,62 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-
         val rectanguloView: View = findViewById(R.id.rectangulo);
+        rectanguloView.post {
+            val btnArriba: Button = findViewById(R.id.btnArriba)
+            val btnAbajo: Button = findViewById(R.id.btnAbajo)
+            val btnIzquierda: Button = findViewById(R.id.btnIzquierda)
+            val btnDerecha: Button = findViewById(R.id.btnDerecha)
+            val btnCambiarTamanio: Button = findViewById(R.id.btnCambiarTamanio)
+            val btnCambiarColor: Button = findViewById(R.id.btnCambiarColor)
 
-        val rectangulo: Rectangulo = Rectangulo(ContextCompat.getColor(this, R.color.cyan), 200, 200)
 
-        val btnArriba: Button = findViewById(R.id.btnArriba)
-        val btnAbajo: Button = findViewById(R.id.btnAbajo)
-        val btnIzquierda: Button = findViewById(R.id.btnIzquierda)
-        val btnDerecha: Button = findViewById(R.id.btnDerecha)
-        val btnCambiarTamanio: Button = findViewById(R.id.btnCambiarTamanio)
-        val btnCambiarColor: Button = findViewById(R.id.btnCambiarColor)
+            val inicialX = rectanguloView.x.toInt()
+            val inicialY = rectanguloView.y.toInt()
 
-        btnArriba.setOnClickListener {
-            rectangulo.movArriba()
-            actualizarVista(rectangulo, rectanguloView)
+            val inicialWidth = rectanguloView.width
+            val inicialHeigth = rectanguloView.height
+
+            val rectangulo: Rectangulo = Rectangulo(
+                ContextCompat.getColor(this, R.color.cyan),
+                inicialWidth,
+                inicialHeigth
+            ).apply { x = inicialX; y = inicialY }
+
+
+            btnArriba.setOnClickListener {
+                rectangulo.movArriba()
+                actualizarVista(rectangulo, rectanguloView)
+            }
+
+            btnAbajo.setOnClickListener {
+                rectangulo.movAbajo()
+                actualizarVista(rectangulo, rectanguloView)
+            }
+
+            btnIzquierda.setOnClickListener {
+                rectangulo.movIzqda()
+                actualizarVista(rectangulo, rectanguloView)
+
+            }
+
+            btnDerecha.setOnClickListener {
+                rectangulo.movDcha()
+                actualizarVista(rectangulo, rectanguloView)
+
+            }
+
+            btnCambiarTamanio.setOnClickListener {
+                rectangulo.cambiarTamano(200, 200)
+                actualizarVista(rectangulo, rectanguloView)
+
+            }
+
+            btnCambiarColor.setOnClickListener {
+                rectangulo.color = generarColorAleatorio()
+                actualizarVista(rectangulo, rectanguloView)
+            }
         }
-
-        btnAbajo.setOnClickListener {
-            rectangulo.movAbajo()
-            actualizarVista(rectangulo, rectanguloView)
-        }
-
-        btnIzquierda.setOnClickListener {
-            rectangulo.movIzqda()
-            actualizarVista(rectangulo,rectanguloView)
-
-        }
-
-        btnDerecha.setOnClickListener {
-            rectangulo.movDcha()
-            actualizarVista(rectangulo,rectanguloView)
-
-        }
-
-        btnCambiarTamanio.setOnClickListener {
-            rectangulo.cambiarTamano(200, 200)
-            actualizarVista(rectangulo,rectanguloView)
-
-        }
-
-        btnCambiarColor.setOnClickListener {
-            rectangulo.color = ContextCompat.getColor(this, R.color.black)
-            actualizarVista(rectangulo,rectanguloView)
-        }
-
     }
 
     private fun actualizarVista(rectangulo: Rectangulo, rectanguloView: View){
@@ -76,6 +88,12 @@ class MainActivity : AppCompatActivity() {
         // método para que tome efecto, solicita de nuevo el layout
         rectanguloView.requestLayout()
 
+    }
+
+    fun generarColorAleatorio() : Int {
+        val color = Random.nextInt();
+
+        return color
     }
 
 }

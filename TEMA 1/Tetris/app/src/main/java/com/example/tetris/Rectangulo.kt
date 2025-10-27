@@ -24,4 +24,5 @@ class Rectangulo(var color: Int, var ancho: Int, var alto: Int) {
         this.alto = alto
     }
 
+
 }
