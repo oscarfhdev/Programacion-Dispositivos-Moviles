@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
             val btnDerecha: Button = findViewById(R.id.btnDerecha)
             val btnCambiarTamanio: Button = findViewById(R.id.btnCambiarTamanio)
             val btnCambiarColor: Button = findViewById(R.id.btnCambiarColor)
+            val btnCambiarColorBorde: Button = findViewById(R.id.btnCambiarColorBorde)
 
 
             val inicialX = rectanguloView.x.toInt()
@@ -32,11 +33,11 @@ class MainActivity : AppCompatActivity() {
             val inicialWidth = rectanguloView.width
             val inicialHeigth = rectanguloView.height
 
-            val rectangulo: Rectangulo = Rectangulo(
+            val rectangulo: RectanguloConBordes = RectanguloConBordes(
                 ContextCompat.getColor(this, R.color.cyan),
                 inicialWidth,
                 inicialHeigth
-            ).apply { x = inicialX; y = inicialY }
+            ).apply { x = inicialX; y = inicialY; bordeColor = ContextCompat.getColor(this@MainActivity, R.color.black) }
 
 
             btnArriba.setOnClickListener {
@@ -69,6 +70,11 @@ class MainActivity : AppCompatActivity() {
 
             btnCambiarColor.setOnClickListener {
                 rectangulo.color = generarColorAleatorio()
+                actualizarVista(rectangulo, rectanguloView)
+            }
+
+            btnCambiarColorBorde.setOnClickListener {
+                rectangulo.cambiarColorBorde(generarColorAleatorio())
                 actualizarVista(rectangulo, rectanguloView)
             }
         }

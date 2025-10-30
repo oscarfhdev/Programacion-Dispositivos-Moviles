@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/btnCambiarColorBorde"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnAbajo"
+        android:layout_marginLeft="-68dp"
+        android:layout_marginTop="98dp"
+        android:layout_toRightOf="@id/btnCambiarTamanio"
+        android:backgroundTint="#9C27B0"
+        android:text="Cambiar Color Borde" />
+
     <View
         android:id="@+id/rectangulo"
         android:layout_width="100dp"
