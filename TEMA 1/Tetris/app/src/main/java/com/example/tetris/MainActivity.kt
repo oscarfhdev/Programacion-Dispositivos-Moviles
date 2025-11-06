@@ -1,5 +1,6 @@
 package com.example.tetris
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -77,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                 rectangulo.cambiarColorBorde(generarColorAleatorio())
                 actualizarVista(rectangulo, rectanguloView)
             }
+
+            btnCambiarColorBorde.setOnClickListener {
+                actualizarVista(rectangulo, rectanguloView)
+            }
         }
     }
 
@@ -86,14 +91,16 @@ class MainActivity : AppCompatActivity() {
         rectanguloView.layoutParams.width = rectangulo.ancho
         rectanguloView.layoutParams.height = rectangulo.alto
 
-        rectanguloView.setBackgroundColor(rectangulo.color)
+        val drawable = GradientDrawable()
+        drawable.setColor(rectangulo.color)
+        drawable.setStroke(10, rectangulo.color)
+//        rectanguloView.setBackgroundColor(rectangulo.color)
 
         rectanguloView.x = rectangulo.x.toFloat()
         rectanguloView.y = rectangulo.y.toFloat()
 
         // método para que tome efecto, solicita de nuevo el layout
         rectanguloView.requestLayout()
-
     }
 
     fun generarColorAleatorio() : Int {
