@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable // Le ponemos esta anotación para indicar que genera UI
-fun MiPracticaConAnidamientos() {  // Definimos la función para ser llamada desde el mainActivity
+fun miPracticaConAnidamientos() {  // Definimos la función para ser llamada desde el mainActivity
 
     // ESto organiza los hijos verticalmente
     Column(
@@ -120,7 +120,7 @@ fun MiPracticaConAnidamientos() {  // Definimos la función para ser llamada des
 fun PreviewMiPracticaConAnidamientos() {
     MaterialTheme {
         Surface {
-            MiPracticaConAnidamientos()
+            miPracticaConAnidamientos()
         }
     }
 }
