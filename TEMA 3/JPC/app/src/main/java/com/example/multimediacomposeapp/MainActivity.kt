@@ -25,6 +25,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import android.widget.VideoView
+import android.net.Uri
+import androidx.compose.foundation.layout.Box
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +126,31 @@ fun AudioScreen() {
 }
 
 @Composable
-fun VideoScreen() { /* Contenido en PASO 8 */ }
+fun VideoScreen() {
+    val context = LocalContext.current // Obtenemos el contexto
+
+    // AndroidView permite insertar Views tradicionales (como VideoView) en Compose
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            // La función 'factory' es donde se crea y configura la View tradicional
+            factory = { ctx ->
+                // Crea un VideoView [cite: 207]
+                VideoView(ctx).apply {
+
+                    // 1. Construir la URI al archivo video.mp4 dentro de la carpeta raw
+                    val uri = "android.resource://${context.packageName}/${R.raw.video}"
+
+                    // 2. Establecer la URI para cargar el vídeo
+                    setVideoURI(Uri.parse(uri))
+
+                    // 3. Iniciar la reproducción automáticamente
+                    start()
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun CameraScreen() { /* Contenido en PASO 10 */ }
