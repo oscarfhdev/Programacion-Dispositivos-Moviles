@@ -188,4 +188,28 @@ fun CameraScreen() {
 }
 
 @Composable
-fun RecorderScreen() { /* Contenido en PASO 11 */ }
+fun RecorderScreen() {
+    // 1. Preparamos el lanzador de la actividad (aunque en este caso no recogemos el audio de vuelta)
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Grabadora de sonido", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(20.dp))
+
+        Button(onClick = {
+            // 2. Creamos el Intent específico para grabar audio
+            val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
+
+            launcher.launch(intent)
+
+        }) {
+            Text("Grabar audio")
+        }
+    }
+}
