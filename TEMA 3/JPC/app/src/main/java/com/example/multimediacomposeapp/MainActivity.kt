@@ -24,11 +24,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.remember
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.VideoView
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
+import android.provider.MediaStore
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,11 +86,11 @@ fun MenuScreen (navController: NavController) {
         }
 
         Button(onClick = { navController.navigate (NavRoutes.Camera.route) }) {
-            Text("Cámara (Intent)")
+            Text("Cámara")
         }
 
         Button(onClick = { navController.navigate (NavRoutes.Recorder.route) }) {
-            Text("Grabadora (Intent)")
+            Text("Grabadora")
         }
     }
 }
@@ -153,7 +162,30 @@ fun VideoScreen() {
 }
 
 @Composable
-fun CameraScreen() { /* Contenido en PASO 10 */ }
+fun CameraScreen() {
+    // El "Lanzador": Prepara la petición para abrir la cámara y qué hacer al volver
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result -> }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Cámara", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(20.dp))
+
+        Button(onClick = {
+            // Creamos el Intent para capturar imagen
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            // Lanzamos la cámara
+            launcher.launch(intent)
+        }) {
+            Text("Abrir cámara")
+        }
+    }
+}
 
 @Composable
 fun RecorderScreen() { /* Contenido en PASO 11 */ }
