@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.asImageBitmap
 
@@ -58,27 +59,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MultimediaComposeAppTheme {
-                // Creamos el controlador de navegación
+                // Creamos el controlador que gestiona la navegación entre pantallas [cite: 86]
                 val navController = rememberNavController()
 
-                // Definimos el contenedor de navegación
+                // Definimos el contenedor principal de navegación [cite: 87]
                 NavHost(
                     navController = navController,
                     startDestination = NavRoutes.Menu.route
                 ) {
-                    // 1. Pantalla del Menú
+                    // 1. Pantalla del Menú [cite: 93]
                     composable(NavRoutes.Menu.route) { MenuScreen(navController) }
 
-                    // 2. Pantalla de Audio (le pasamos el controlador para poder volver)
+                    // 2. Pantalla de Audio (pasamos navController para volver) [cite: 93]
                     composable(NavRoutes.Audio.route) { AudioScreen(navController) }
 
-                    // 3. Pantalla de Vídeo (le pasamos el controlador)
+                    // 3. Pantalla de Vídeo (pasamos navController para volver) [cite: 94]
                     composable(NavRoutes.Video.route) { VideoScreen(navController) }
 
-                    // 4. Pantalla de Cámara (le pasamos el controlador)
+                    // 4. Pantalla de Cámara (pasamos navController para volver) [cite: 95]
                     composable(NavRoutes.Camera.route) { CameraScreen(navController) }
 
-                    // 5. Pantalla de Grabadora (le pasamos el controlador)
+                    // 5. Pantalla de Grabadora (pasamos navController para volver) [cite: 96]
                     composable(NavRoutes.Recorder.route) { RecorderScreen(navController) }
                 }
             }
@@ -93,32 +94,32 @@ fun MenuScreen(navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Icono decorativo del menú
+        // Icono decorativo del título
         Icon(Icons.Filled.Home, contentDescription = "Casa", modifier = Modifier.padding(bottom = 16.dp))
         Text("Menú Multimedia", style = MaterialTheme.typography.headlineMedium)
 
-        // Botón para ir al Audio
+        // Botón que navega a la pantalla de Audio [cite: 109]
         Button(onClick = { navController.navigate(NavRoutes.Audio.route) }) {
             Icon(Icons.Filled.PlayArrow, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Audio + Volumen")
         }
 
-        // Botón para ir al Vídeo
+        // Botón que navega a la pantalla de Vídeo [cite: 113]
         Button(onClick = { navController.navigate(NavRoutes.Video.route) }) {
             Icon(Icons.Filled.Star, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Vídeo + Controles")
         }
 
-        // Botón para ir a la Cámara
+        // Botón que navega a la pantalla de Cámara [cite: 116]
         Button(onClick = { navController.navigate(NavRoutes.Camera.route) }) {
             Icon(Icons.Filled.Face, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Cámara")
         }
 
-        // Botón para ir a la Grabadora
+        // Botón que navega a la pantalla de Grabadora [cite: 119]
         Button(onClick = { navController.navigate(NavRoutes.Recorder.route) }) {
             Icon(Icons.Filled.Call, contentDescription = null)
             Spacer(Modifier.width(8.dp))
@@ -131,10 +132,10 @@ fun MenuScreen(navController: NavController) {
 fun AudioScreen(navController: NavController) {
     val context = LocalContext.current
 
-    // Aquí guardamos el estado del volumen
+    // Variable para guardar el volumen (0.0 a 1.0)
     var volume by remember { mutableFloatStateOf(0.5f) }
 
-    // Creamos el reproductor y cargamos el archivo de audio
+    // Creamos el MediaPlayer una sola vez y cargamos el audio [cite: 141]
     val mediaPlayer = remember {
         MediaPlayer.create(context, R.raw.audio).apply {
             setVolume(0.5f, 0.5f)
@@ -150,9 +151,11 @@ fun AudioScreen(navController: NavController) {
         Spacer(Modifier.height(20.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            // Botones para controlar la reproducción
+            // Botón para iniciar reproducción [cite: 150]
             Button(onClick = { mediaPlayer.start() }) { Text("Play") }
+            // Botón para pausar reproducción [cite: 153]
             Button(onClick = { mediaPlayer.pause() }) { Text("Pause") }
+            // Botón para detener y reiniciar [cite: 155]
             Button(onClick = {
                 mediaPlayer.pause()
                 mediaPlayer.seekTo(0)
@@ -162,11 +165,12 @@ fun AudioScreen(navController: NavController) {
         Spacer(Modifier.height(30.dp))
         Text(text = "Volumen: ${(volume * 100).toInt()}%")
 
-        // Slider para cambiar el volumen
+        // Slider para controlar el volumen dinámicamente
         Slider(
             value = volume,
             onValueChange = { newVolume ->
                 volume = newVolume
+                // Ajustamos el volumen del MediaPlayer
                 mediaPlayer.setVolume(volume, volume)
             },
             valueRange = 0f..1f
@@ -174,14 +178,13 @@ fun AudioScreen(navController: NavController) {
 
         Spacer(Modifier.height(40.dp))
 
-        // Botón para volver atrás
+        // Botón para volver al menú principal
         Button(onClick = {
-            // Paramos el audio si está sonando antes de salir
+            // Paramos la música si está sonando antes de salir
             if (mediaPlayer.isPlaying) mediaPlayer.stop()
-            // Nos devuelve a la pantalla anterior (Menú)
             navController.popBackStack()
         }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Volver al Menú")
         }
@@ -192,12 +195,13 @@ fun AudioScreen(navController: NavController) {
 fun VideoScreen(navController: NavController) {
     val context = LocalContext.current
 
-    // Creamos el VideoView y cargamos el vídeo
+    // Creamos y configuramos el VideoView dentro de remember
     val videoView = remember {
         VideoView(context).apply {
+            // Construimos la ruta al archivo de vídeo en raw [cite: 203]
             val uri = "android.resource://${context.packageName}/${R.raw.video}"
             setVideoURI(Uri.parse(uri))
-            start()
+            start() // Autoplay al iniciar [cite: 204]
         }
     }
 
@@ -205,7 +209,7 @@ fun VideoScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Contenedor para mostrar el vídeo
+        // Contenedor para incrustar la vista nativa de Android [cite: 183]
         Box(modifier = Modifier.height(300.dp).fillMaxWidth()) {
             AndroidView(
                 factory = { videoView },
@@ -216,7 +220,7 @@ fun VideoScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         Text("Controles de Vídeo", style = MaterialTheme.typography.headlineSmall)
 
-        // Botones de control del vídeo
+        // Botones de control extra para el vídeo
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(top = 16.dp)
@@ -231,12 +235,11 @@ fun VideoScreen(navController: NavController) {
 
         Spacer(Modifier.height(40.dp))
 
-        // Botón para volver atrás
+        // Botón para volver al menú
         Button(onClick = {
-            // Nos devuelve a la pantalla anterior
             navController.popBackStack()
         }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Volver al Menú")
         }
@@ -245,14 +248,14 @@ fun VideoScreen(navController: NavController) {
 
 @Composable
 fun CameraScreen(navController: NavController) {
-    // Variable para guardar la foto
+    // Variable de estado para guardar la foto capturada
     var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    // Preparamos el lanzador para recibir la foto
+    // Preparamos el lanzador que recibirá el resultado de la cámara [cite: 240]
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        // Aquí comprobamos si la foto se hizo bien
+        // Si el resultado es OK, recuperamos la miniatura de la foto
         if (result.resultCode == android.app.Activity.RESULT_OK) {
             val bitmap = result.data?.extras?.get("data") as? Bitmap
             imageBitmap = bitmap
@@ -267,16 +270,15 @@ fun CameraScreen(navController: NavController) {
         Text("Cámara", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(20.dp))
 
-        // Botón para abrir la cámara
+        // Botón que lanza el intent de la cámara [cite: 253]
         Button(onClick = {
-            // Creamos el intent para pedir una captura de imagen
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             launcher.launch(intent)
         }) {
             Text("Abrir cámara")
         }
 
-        // Si tenemos foto, la mostramos aquí
+        // Si hay foto capturada, la mostramos en pantalla
         imageBitmap?.let {
             Spacer(Modifier.height(20.dp))
             Text("Foto capturada:")
@@ -289,12 +291,11 @@ fun CameraScreen(navController: NavController) {
 
         Spacer(Modifier.height(40.dp))
 
-        // Botón para volver atrás
+        // Botón para volver al menú
         Button(onClick = {
-            // Nos devuelve al menú
             navController.popBackStack()
         }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Volver al Menú")
         }
@@ -303,7 +304,7 @@ fun CameraScreen(navController: NavController) {
 
 @Composable
 fun RecorderScreen(navController: NavController) {
-    // Preparamos el lanzador para la grabadora
+    // Preparamos el lanzador para la actividad de grabación [cite: 264]
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { }
@@ -316,11 +317,10 @@ fun RecorderScreen(navController: NavController) {
         Text("Grabadora de sonido", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(20.dp))
 
-        // Botón para grabar audio
+        // Botón para lanzar la grabadora del sistema
         Button(onClick = {
-            // Creamos el intent de grabación
             val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
-            // Usamos try-catch para proteger la app
+            // Protegemos con try-catch por si falla en el emulador
             try {
                 launcher.launch(intent)
             } catch (e: Exception) {
@@ -332,12 +332,11 @@ fun RecorderScreen(navController: NavController) {
 
         Spacer(Modifier.height(40.dp))
 
-        // Botón para volver atrás
+        // Botón para volver al menú
         Button(onClick = {
-            // Nos devuelve al menú
             navController.popBackStack()
         }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Volver al Menú")
         }
