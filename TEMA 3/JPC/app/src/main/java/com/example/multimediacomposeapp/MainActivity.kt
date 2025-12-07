@@ -59,27 +59,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MultimediaComposeAppTheme {
-                // Creamos el controlador que gestiona la navegación entre pantallas [cite: 86]
+                // Creamos el controlador que gestiona la navegación entre pantallas
                 val navController = rememberNavController()
 
-                // Definimos el contenedor principal de navegación [cite: 87]
+                // Definimos el contenedor principal de navegación
                 NavHost(
                     navController = navController,
                     startDestination = NavRoutes.Menu.route
                 ) {
-                    // 1. Pantalla del Menú [cite: 93]
+                    // 1. Pantalla del Menú
                     composable(NavRoutes.Menu.route) { MenuScreen(navController) }
 
-                    // 2. Pantalla de Audio (pasamos navController para volver) [cite: 93]
+                    // 2. Pantalla de Audio (pasamos navController para volver)
                     composable(NavRoutes.Audio.route) { AudioScreen(navController) }
 
-                    // 3. Pantalla de Vídeo (pasamos navController para volver) [cite: 94]
+                    // 3. Pantalla de Vídeo (pasamos navController para volver)
                     composable(NavRoutes.Video.route) { VideoScreen(navController) }
 
-                    // 4. Pantalla de Cámara (pasamos navController para volver) [cite: 95]
+                    // 4. Pantalla de Cámara (pasamos navController para volver)
                     composable(NavRoutes.Camera.route) { CameraScreen(navController) }
 
-                    // 5. Pantalla de Grabadora (pasamos navController para volver) [cite: 96]
+                    // 5. Pantalla de Grabadora (pasamos navController para volver)
                     composable(NavRoutes.Recorder.route) { RecorderScreen(navController) }
                 }
             }
@@ -98,28 +98,28 @@ fun MenuScreen(navController: NavController) {
         Icon(Icons.Filled.Home, contentDescription = "Casa", modifier = Modifier.padding(bottom = 16.dp))
         Text("Menú Multimedia", style = MaterialTheme.typography.headlineMedium)
 
-        // Botón que navega a la pantalla de Audio [cite: 109]
+        // Botón que navega a la pantalla de Audio
         Button(onClick = { navController.navigate(NavRoutes.Audio.route) }) {
             Icon(Icons.Filled.PlayArrow, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Audio + Volumen")
         }
 
-        // Botón que navega a la pantalla de Vídeo [cite: 113]
+        // Botón que navega a la pantalla de Vídeo
         Button(onClick = { navController.navigate(NavRoutes.Video.route) }) {
             Icon(Icons.Filled.Star, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Vídeo + Controles")
         }
 
-        // Botón que navega a la pantalla de Cámara [cite: 116]
+        // Botón que navega a la pantalla de Cámara
         Button(onClick = { navController.navigate(NavRoutes.Camera.route) }) {
             Icon(Icons.Filled.Face, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text("Cámara")
         }
 
-        // Botón que navega a la pantalla de Grabadora [cite: 119]
+        // Botón que navega a la pantalla de Grabadora
         Button(onClick = { navController.navigate(NavRoutes.Recorder.route) }) {
             Icon(Icons.Filled.Call, contentDescription = null)
             Spacer(Modifier.width(8.dp))
@@ -135,7 +135,7 @@ fun AudioScreen(navController: NavController) {
     // Variable para guardar el volumen (0.0 a 1.0)
     var volume by remember { mutableFloatStateOf(0.5f) }
 
-    // Creamos el MediaPlayer una sola vez y cargamos el audio [cite: 141]
+    // Creamos el MediaPlayer una sola vez y cargamos el audio
     val mediaPlayer = remember {
         MediaPlayer.create(context, R.raw.audio).apply {
             setVolume(0.5f, 0.5f)
@@ -151,11 +151,11 @@ fun AudioScreen(navController: NavController) {
         Spacer(Modifier.height(20.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            // Botón para iniciar reproducción [cite: 150]
+            // Botón para iniciar reproducción
             Button(onClick = { mediaPlayer.start() }) { Text("Play") }
-            // Botón para pausar reproducción [cite: 153]
+            // Botón para pausar reproducción
             Button(onClick = { mediaPlayer.pause() }) { Text("Pause") }
-            // Botón para detener y reiniciar [cite: 155]
+            // Botón para detener y reiniciar
             Button(onClick = {
                 mediaPlayer.pause()
                 mediaPlayer.seekTo(0)
@@ -198,10 +198,10 @@ fun VideoScreen(navController: NavController) {
     // Creamos y configuramos el VideoView dentro de remember
     val videoView = remember {
         VideoView(context).apply {
-            // Construimos la ruta al archivo de vídeo en raw [cite: 203]
+            // Construimos la ruta al archivo de vídeo en raw
             val uri = "android.resource://${context.packageName}/${R.raw.video}"
             setVideoURI(Uri.parse(uri))
-            start() // Autoplay al iniciar [cite: 204]
+            start() // Autoplay al iniciar
         }
     }
 
@@ -209,7 +209,7 @@ fun VideoScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Contenedor para incrustar la vista nativa de Android [cite: 183]
+        // Contenedor para incrustar la vista nativa de Android
         Box(modifier = Modifier.height(300.dp).fillMaxWidth()) {
             AndroidView(
                 factory = { videoView },
@@ -251,7 +251,7 @@ fun CameraScreen(navController: NavController) {
     // Variable de estado para guardar la foto capturada
     var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    // Preparamos el lanzador que recibirá el resultado de la cámara [cite: 240]
+    // Preparamos el lanzador que recibirá el resultado de la cámara
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -270,7 +270,7 @@ fun CameraScreen(navController: NavController) {
         Text("Cámara", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(20.dp))
 
-        // Botón que lanza el intent de la cámara [cite: 253]
+        // Botón que lanza el intent de la cámara
         Button(onClick = {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             launcher.launch(intent)
@@ -304,7 +304,7 @@ fun CameraScreen(navController: NavController) {
 
 @Composable
 fun RecorderScreen(navController: NavController) {
-    // Preparamos el lanzador para la actividad de grabación [cite: 264]
+    // Preparamos el lanzador para la actividad de grabación
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { }
