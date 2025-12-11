@@ -40,7 +40,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Slider
@@ -70,16 +69,16 @@ class MainActivity : ComponentActivity() {
                     // 1. Pantalla del Menú
                     composable(NavRoutes.Menu.route) { MenuScreen(navController) }
 
-                    // 2. Pantalla de Audio (pasamos navController para volver)
+                    // 2. Pantalla de Audio (pasamos navController para volver
                     composable(NavRoutes.Audio.route) { AudioScreen(navController) }
 
-                    // 3. Pantalla de Vídeo (pasamos navController para volver)
+                    // 3. Pantalla de Vídeo (pasamos navController para volver
                     composable(NavRoutes.Video.route) { VideoScreen(navController) }
 
-                    // 4. Pantalla de Cámara (pasamos navController para volver)
+                    // 4. Pantalla de Cámara (pasamos navController para volver
                     composable(NavRoutes.Camera.route) { CameraScreen(navController) }
 
-                    // 5. Pantalla de Grabadora (pasamos navController para volver)
+                    // 5. Pantalla de Grabadora (pasamos navController para volver
                     composable(NavRoutes.Recorder.route) { RecorderScreen(navController) }
                 }
             }
