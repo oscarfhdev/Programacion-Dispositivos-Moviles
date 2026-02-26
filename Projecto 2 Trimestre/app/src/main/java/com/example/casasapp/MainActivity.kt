@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.casasapp.data.AppDatabase
+import com.example.casasapp.ui.pantallas.PantallaDetalle
 import com.example.casasapp.ui.pantallas.PantallaFormulario
 import com.example.casasapp.ui.pantallas.PantallaGaleria
 import com.example.casasapp.ui.pantallas.PantallaInicio
@@ -22,11 +23,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Initialize the database and the ViewModel
+            // Inicializar la base de datos y el ViewModel
             val database = AppDatabase.getDatabase(this)
             val viewModel: CasasViewModel = viewModel(factory = ViewModelFactory(database.casaDao()))
             CasasAppTheme {
-                // The AppNavigation composable is the root of the app's UI
                 AppNavigation(viewModel)
             }
         }
@@ -34,31 +34,33 @@ class MainActivity : ComponentActivity() {
 }
 
 /**
- * This composable defines the navigation graph of the application.
- * It uses a NavHost to define the different screens (destinations) and the routes to navigate between them.
+ * Composable que define el grafo de navegación de la aplicación.
+ * Usa un NavHost para definir las pantallas y las rutas entre ellas.
  */
 @Composable
 fun AppNavigation(viewModel: CasasViewModel) {
-    // The NavController is responsible for managing the navigation stack
     val navController = rememberNavController()
-    // The NavHost is a container for the different screens
+
     NavHost(navController = navController, startDestination = "inicio") {
-        // Each composable() block defines a screen and its route
+        // Pantalla de inicio / landing
         composable("inicio") {
             PantallaInicio(navController)
         }
+        // Galería con todas las viviendas
         composable("galeria") {
             PantallaGaleria(navController, viewModel)
         }
+        // Formulario para añadir una nueva vivienda
         composable("formulario") {
             PantallaFormulario(navController, viewModel)
         }
-        // This screen takes an argument (the house ID) to show the details of a specific house
+        // Pantalla de detalle con el ID de la vivienda como argumento
         composable(
             "detalle/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.IntType }) 
-        ) {
-            // Placeholder for detail screen
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val casaId = backStackEntry.arguments?.getInt("id") ?: 0
+            PantallaDetalle(navController, viewModel, casaId)
         }
     }
 }

@@ -4,34 +4,32 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
- * This is the Data Access Object (DAO) for the Casa entity.
- * It is an interface that defines the methods for interacting with the database.
- * Room will generate the implementation of this interface at compile time.
+ * Data Access Object para la entidad Casa.
+ * Room genera la implementación de esta interfaz en tiempo de compilación.
  */
 @Dao
 interface CasaDAO {
-    /**
-     * This method retrieves all the houses from the database.
-     * It returns a Flow, which is a stream of data that can be observed for changes.
-     */
+    /** Obtiene todas las casas como un Flow reactivo */
     @Query("SELECT * FROM casas")
     fun getAll(): Flow<List<Casa>>
 
-    /**
-     * This method inserts a new house into the database.
-     * The @Insert annotation tells Room to generate the corresponding SQL INSERT statement.
-     * The suspend modifier indicates that this is a coroutine function that should be called from a coroutine scope.
-     */
+    /** Busca una casa por su ID */
+    @Query("SELECT * FROM casas WHERE id = :id")
+    fun getById(id: Int): Flow<Casa?>
+
+    /** Inserta una nueva casa */
     @Insert
     suspend fun insert(casa: Casa)
 
-    /**
-     * This method deletes a house from the database.
-     * The @Delete annotation tells Room to generate the corresponding SQL DELETE statement.
-     */
+    /** Actualiza una casa existente */
+    @Update
+    suspend fun update(casa: Casa)
+
+    /** Elimina una casa */
     @Delete
     suspend fun delete(casa: Casa)
 }
