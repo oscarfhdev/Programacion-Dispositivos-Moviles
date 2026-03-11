@@ -40,6 +40,10 @@ class InventoryViewModel @Inject constructor(
     private val _uiMessage = MutableStateFlow<String?>(null)
     val uiMessage: StateFlow<String?> = _uiMessage
 
+    // Estado para indicar si estamos descargando de la API
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     fun clearUiMessage() {
         _uiMessage.value = null
     }
@@ -47,28 +51,31 @@ class InventoryViewModel @Inject constructor(
     // Función para descargar los productos iniciales de FakeStore API
     fun downloadProducts() {
         viewModelScope.launch {
-            // 1. Obtenemos el SSID WiFi que la tienda exige desde DataStore.
-            val requiredSsid = settingsManager.storeWifiSsidFlow.first()
-
-            // 2. Verificamos la conexión
-            if (!networkMonitor.isConnected()) {
-                _uiMessage.value = "Error: No hay conexión a Internet."
-                return@launch
-            }
-
-            // 3. Verificamos si la red WiFi es la correcta
-            if (!networkMonitor.isConnectedToStoreWifi(requiredSsid)) {
-                _uiMessage.value = "Error: No estás conectado a la WiFi de la tienda ($requiredSsid)."
-                return@launch
-            }
-
-            // 4. Si pasamos los controles, sincronizamos
-            _uiMessage.value = "Descargando catálogo..."
+            _isLoading.value = true
             try {
+                // 1. Obtenemos el SSID WiFi que la tienda exige desde DataStore.
+                val requiredSsid = settingsManager.storeWifiSsidFlow.first()
+
+                // 2. Verificamos la conexión
+                if (!networkMonitor.isConnected()) {
+                    _uiMessage.value = "Error: No hay conexión a Internet."
+                    return@launch
+                }
+
+                // 3. Verificamos si la red WiFi es la correcta
+                if (!networkMonitor.isConnectedToStoreWifi(requiredSsid)) {
+                    _uiMessage.value = "Error: No estás conectado a la WiFi de la tienda ($requiredSsid)."
+                    return@launch
+                }
+
+                // 4. Si pasamos los controles, sincronizamos
+                _uiMessage.value = "Descargando catálogo..."
                 repository.syncProductsFromApi()
                 _uiMessage.value = "Catálogo descargado con éxito."
             } catch (e: Exception) {
                 _uiMessage.value = "Error al descargar: ${e.message}"
+            } finally {
+                _isLoading.value = false
             }
         }
     }
