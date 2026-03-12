@@ -47,11 +47,7 @@ import com.example.casasapp.ui.theme.AzulMedio
 import com.example.casasapp.ui.theme.DoradoSuave
 import com.example.casasapp.ui.viewmodel.CasasViewModel
 
-/**
- * Pantalla de formulario para registrar una nueva vivienda.
- * Incluye campos de nombre y descripción con validación,
- * selector de imagen con previsualización, y botón de guardar.
- */
+// el form para guardar casas nuevas, controlamos que no dejen cosas vacias
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaFormulario(navController: NavController, viewModel: CasasViewModel) {
@@ -63,7 +59,7 @@ fun PantallaFormulario(navController: NavController, viewModel: CasasViewModel) 
     // Para saber si el usuario ya intentó enviar el formulario
     var intentoGuardar by remember { mutableStateOf(false) }
 
-    // Launcher para abrir la galería del móvil y seleccionar una imagen
+    // esto es para abrir el buscador de archivos del movil y pillar una foto
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         imagenUri = uri
     }
@@ -200,7 +196,7 @@ fun PantallaFormulario(navController: NavController, viewModel: CasasViewModel) 
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón de guardar
+            // comprobamos todo antes de insertar en la base de datos
             Button(
                 onClick = {
                     intentoGuardar = true

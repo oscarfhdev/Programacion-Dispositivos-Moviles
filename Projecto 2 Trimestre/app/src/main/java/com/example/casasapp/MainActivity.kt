@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Inicializar la base de datos y el ViewModel
+            // instanciamos la bbdd y el viewmodel para pasarle los datos a las pantallas
             val database = AppDatabase.getDatabase(this)
             val viewModel: CasasViewModel = viewModel(factory = ViewModelFactory(database.casaDao()))
             CasasAppTheme {
@@ -33,28 +33,25 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/**
- * Composable que define el grafo de navegación de la aplicación.
- * Usa un NavHost para definir las pantallas y las rutas entre ellas.
- */
+// aqui montamos todo el tema de las rutas para movernos entre pantallas
 @Composable
 fun AppNavigation(viewModel: CasasViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "inicio") {
-        // Pantalla de inicio / landing
+        // la primera pantallita
         composable("inicio") {
             PantallaInicio(navController)
         }
-        // Galería con todas las viviendas
+        // pilla todas con un LazyColumn
         composable("galeria") {
             PantallaGaleria(navController, viewModel)
         }
-        // Formulario para añadir una nueva vivienda
+        // el añadir de toda la vida
         composable("formulario") {
             PantallaFormulario(navController, viewModel)
         }
-        // Pantalla de detalle con el ID de la vivienda como argumento
+        // le pasamos la id de la casa pa hacer magia y enseñarla solita
         composable(
             "detalle/{id}",
             arguments = listOf(navArgument("id") { type = NavType.IntType })

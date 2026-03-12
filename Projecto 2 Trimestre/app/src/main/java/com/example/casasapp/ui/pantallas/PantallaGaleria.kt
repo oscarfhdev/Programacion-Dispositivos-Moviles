@@ -57,11 +57,7 @@ import com.example.casasapp.ui.theme.AzulMedio
 import com.example.casasapp.ui.theme.DoradoSuave
 import com.example.casasapp.ui.viewmodel.CasasViewModel
 
-/**
- * Pantalla de galería que muestra todas las casas registradas.
- * Usa Scaffold con TopAppBar y FloatingActionButton.
- * Las tarjetas son clickables y navegan a la pantalla de detalle.
- */
+// donde pintamos la lista de casas. usamos scaffold para que quede la barra fija arriba y el boton flotante
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaGaleria(navController: NavController, viewModel: CasasViewModel) {
@@ -98,7 +94,7 @@ fun PantallaGaleria(navController: NavController, viewModel: CasasViewModel) {
         }
     ) { paddingValues ->
         if (casas.isEmpty()) {
-            // Mensaje cuando no hay casas
+            // si la lista esta vacia sacamos este mensajito para que no quede feo
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -146,10 +142,7 @@ fun PantallaGaleria(navController: NavController, viewModel: CasasViewModel) {
     }
 }
 
-/**
- * Tarjeta individual de una casa con imagen, nombre, descripción
- * y botón de eliminar con diálogo de confirmación.
- */
+// el componente de la tarjetita suelta para mostrar cada casa de la lista
 @Composable
 fun CasaCard(
     casa: Casa,

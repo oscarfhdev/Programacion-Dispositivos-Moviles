@@ -36,11 +36,7 @@ import com.example.casasapp.ui.theme.AzulMedio
 import com.example.casasapp.ui.theme.AzulOscuro
 import com.example.casasapp.ui.theme.DoradoSuave
 
-/**
- * Pantalla de inicio de la aplicación.
- * Muestra un diseño tipo "landing" con gradiente de fondo,
- * un icono de casa grande y un botón para acceder a la galería.
- */
+// la pantalla principal, estilo portada con los colorines de fondo
 @Composable
 fun PantallaInicio(navController: NavController) {
     // Fondo con gradiente diagonal
@@ -63,7 +59,7 @@ fun PantallaInicio(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Icono de casa en un círculo dorado
+            // metemos el icono en un circulo para que resalte un poco más
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -103,7 +99,7 @@ fun PantallaInicio(navController: NavController) {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Botón principal estilizado
+            // botonazo principal que nos lleva a la galeria
             Button(
                 onClick = { navController.navigate("galeria") },
                 modifier = Modifier

@@ -7,29 +7,26 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Data Access Object para la entidad Casa.
- * Room genera la implementación de esta interfaz en tiempo de compilación.
- */
+// las queries para jugar con la base de datos de sqlite
 @Dao
 interface CasaDAO {
-    /** Obtiene todas las casas como un Flow reactivo */
+    // pillamos todas de golpe
     @Query("SELECT * FROM casas")
     fun getAll(): Flow<List<Casa>>
 
-    /** Busca una casa por su ID */
+    // pillamos una sola pasando el id
     @Query("SELECT * FROM casas WHERE id = :id")
     fun getById(id: Int): Flow<Casa?>
 
-    /** Inserta una nueva casa */
+    // metemos una
     @Insert
     suspend fun insert(casa: Casa)
 
-    /** Actualiza una casa existente */
+    // por si ponemos cosita de editar mas tarde
     @Update
     suspend fun update(casa: Casa)
 
-    /** Elimina una casa */
+    // a tomar viento fresco
     @Delete
     suspend fun delete(casa: Casa)
 }

@@ -51,17 +51,14 @@ import com.example.casasapp.ui.theme.AzulMedio
 import com.example.casasapp.ui.theme.AzulOscuro
 import com.example.casasapp.ui.viewmodel.CasasViewModel
 
-/**
- * Pantalla de detalle que muestra la información completa de una vivienda.
- * Incluye imagen en grande (o placeholder), nombre, descripción y botón de eliminar.
- */
+// vista para ver todos los datos de una casa en concreto, le llega el id por parametro
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaDetalle(navController: NavController, viewModel: CasasViewModel, casaId: Int) {
     val casa by viewModel.getCasaById(casaId).collectAsState()
     var mostrarDialogo by remember { mutableStateOf(false) }
 
-    // Diálogo de confirmación de eliminación
+    // ventanita por si le dan a borrar sin querer
     if (mostrarDialogo) {
         AlertDialog(
             onDismissRequest = { mostrarDialogo = false },
