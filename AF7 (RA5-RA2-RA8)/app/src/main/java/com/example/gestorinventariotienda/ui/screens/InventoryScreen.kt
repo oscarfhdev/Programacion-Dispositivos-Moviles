@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -73,8 +74,8 @@ fun InventoryScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Inventario Tienda") },
+            CenterAlignedTopAppBar(
+                title = { Text("Inventario Tienda", fontWeight = FontWeight.Bold) },
                 actions = {
                     // Botón en la Toolbar para bajarnos los productos via Retrofit
                     IconButton(onClick = { viewModel.downloadProducts() }) {
