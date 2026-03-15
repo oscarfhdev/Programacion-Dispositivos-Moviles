@@ -16,8 +16,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bathtub
+import androidx.compose.material.icons.filled.Bed
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Grass
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Pool
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -181,6 +188,51 @@ fun PantallaDetalle(navController: NavController, viewModel: CasasViewModel, cas
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Detalles Adicionales (Habitaciones / Baños)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        FeatureBadge(
+                            icon = Icons.Filled.Bed,
+                            label = "${vivienda.habitaciones} Habitaciones",
+                            modifier = Modifier.weight(1f)
+                        )
+                        FeatureBadge(
+                            icon = Icons.Filled.Bathtub,
+                            label = "${vivienda.banos} Baños",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Características Booleanas (Terreno, Piscina, Garaje)
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Características Adicionales",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            BooleanFeatureRow(label = "Terreno", hasFeature = vivienda.tieneTerreno)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            BooleanFeatureRow(label = "Piscina", hasFeature = vivienda.tienePiscina)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            BooleanFeatureRow(label = "Garaje", hasFeature = vivienda.tieneGaraje)
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(32.dp))
 
                     // Botón de eliminar
@@ -223,5 +275,45 @@ fun PantallaDetalle(navController: NavController, viewModel: CasasViewModel, cas
                 )
             }
         }
+    }
+}
+
+@Composable
+fun FeatureBadge(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = AzulOscuro.copy(alpha = 0.1f))
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = icon, contentDescription = null, tint = AzulOscuro)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = label, fontWeight = FontWeight.SemiBold, color = AzulOscuro)
+        }
+    }
+}
+
+@Composable
+fun BooleanFeatureRow(label: String, hasFeature: Boolean) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = if (hasFeature) Icons.Filled.Check else Icons.Filled.Close,
+            contentDescription = null,
+            tint = if (hasFeature) Color(0xFF4CAF50) else Color(0xFFF44336)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
