@@ -24,9 +24,9 @@ interface CasaDAO {
 
     // por si ponemos cosita de editar mas tarde
     @Update
-    suspend fun update(casa: Casa)
+    suspend fun updateCasa(casa: Casa)
 
     // a tomar viento fresco
     @Delete
-    suspend fun delete(casa: Casa)
+    suspend fun deleteCasa(casa: Casa)
 }

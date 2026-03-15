@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.HomeWork
 import androidx.compose.material3.AlertDialog
@@ -134,6 +135,7 @@ fun PantallaGaleria(navController: NavController, viewModel: CasasViewModel) {
                     CasaCard(
                         casa = casa,
                         onClick = { navController.navigate("detalle/${casa.id}") },
+                        onEdit = { navController.navigate("formulario?idCasa=${casa.id}") },
                         onDelete = { viewModel.deleteCasa(casa) }
                     )
                 }
@@ -147,6 +149,7 @@ fun PantallaGaleria(navController: NavController, viewModel: CasasViewModel) {
 fun CasaCard(
     casa: Casa,
     onClick: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
     // Estado para controlar el diálogo de confirmación de borrado
@@ -243,17 +246,28 @@ fun CasaCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Botón de editar
+                    IconButton(
+                        onClick = onEdit
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Editar casa",
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                        )
+                    }
 
-                // Botón de eliminar
-                IconButton(
-                    onClick = { mostrarDialogo = true }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Eliminar casa",
-                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
-                    )
+                    // Botón de eliminar
+                    IconButton(
+                        onClick = { mostrarDialogo = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Eliminar casa",
+                            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                        )
+                    }
                 }
             }
         }

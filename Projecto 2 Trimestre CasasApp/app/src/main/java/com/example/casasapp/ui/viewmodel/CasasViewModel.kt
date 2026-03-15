@@ -33,6 +33,13 @@ class CasasViewModel(private val repositorio: RepositorioCasas) : ViewModel() {
         }
     }
 
+    // editamos a través del repo
+    fun updateCasa(casa: Casa) {
+        viewModelScope.launch {
+            repositorio.updateCasa(casa)
+        }
+    }
+
     // buscamos por id a través del repo
     fun getCasaById(id: Int): StateFlow<Casa?> {
         return repositorio.getCasaById(id).stateIn(

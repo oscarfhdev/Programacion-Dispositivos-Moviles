@@ -21,11 +21,11 @@ class RepositorioCasas(private val casaDao: CasaDAO) {
 
     // borramos una casa
     suspend fun deleteCasa(casa: Casa) {
-        casaDao.delete(casa)
+        casaDao.deleteCasa(casa)
     }
 
     // por si editamos en el futuro
     suspend fun updateCasa(casa: Casa) {
-        casaDao.update(casa)
+        casaDao.updateCasa(casa)
     }
 }

@@ -17,5 +17,10 @@ data class Casa(
     val id: Int = 0,
     val nombre: String,
     val imagen: String, // URI of the image
-    val descripcion: String
+    val descripcion: String,
+    val habitaciones: Int,
+    val banos: Int,
+    val tieneTerreno: Boolean,
+    val tienePiscina: Boolean,
+    val tieneGaraje: Boolean
 )

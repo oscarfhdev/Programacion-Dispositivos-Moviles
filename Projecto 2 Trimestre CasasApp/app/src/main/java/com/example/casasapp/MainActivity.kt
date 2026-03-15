@@ -49,9 +49,16 @@ fun AppNavigation(viewModel: CasasViewModel) {
         composable("galeria") {
             PantallaGaleria(navController, viewModel)
         }
-        // el añadir de toda la vida
-        composable("formulario") {
-            PantallaFormulario(navController, viewModel)
+        // el añadir de toda la vida o editar si viene con id
+        composable(
+            route = "formulario?idCasa={idCasa}",
+            arguments = listOf(navArgument("idCasa") { 
+                type = NavType.IntType
+                defaultValue = -1 
+            })
+        ) { backStackEntry ->
+            val idCasa = backStackEntry.arguments?.getInt("idCasa")?.takeIf { it != -1 }
+            PantallaFormulario(navController, viewModel, idCasa)
         }
         // le pasamos la id de la casa pa hacer magia y enseñarla solita
         composable(

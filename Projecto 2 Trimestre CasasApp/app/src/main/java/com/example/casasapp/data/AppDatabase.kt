@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // aqui montamos la configuracion de la bd local
-@Database(entities = [Casa::class], version = 1, exportSchema = false)
+@Database(entities = [Casa::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     // el enchufe al DAO
     abstract fun casaDao(): CasaDAO
