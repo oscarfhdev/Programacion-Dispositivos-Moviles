@@ -67,8 +67,8 @@ fun PantallaGaleria(
             TopAppBar(
                 title = { Text("Catálogo de Películas", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         },
@@ -203,7 +203,7 @@ fun PeliculaCard(
                     maxLines = 1
                 )
                 Text(
-                    text = "${pelicula.añoLanzamiento} • ${pelicula.duracionMinutos} min",
+                    text = "${pelicula.fechaLanzamiento} • ${pelicula.duracionMinutos} min",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -221,18 +221,26 @@ fun PeliculaCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(end = 8.dp)
             ) {
-                IconButton(onClick = onEditClick) {
+                IconButton(
+                    onClick = onEditClick,
+                    colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.secondary
+                    )
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Editar",
-                        tint = MaterialTheme.colorScheme.primary
+                        contentDescription = "Editar"
                     )
                 }
-                IconButton(onClick = { mostrarConfirmacion = true }) {
+                IconButton(
+                    onClick = { mostrarConfirmacion = true },
+                    colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Borrar",
-                        tint = MaterialTheme.colorScheme.error
+                        contentDescription = "Borrar"
                     )
                 }
             }

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AvTimer
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.DiscFull
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -63,12 +64,12 @@ fun PantallaDetalle(
                 title = { Text("Detalle de la Película") },
                 navigationIcon = {
                     IconButton(onClick = onVolver) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver", tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -117,8 +118,8 @@ fun PantallaDetalle(
 
                         AssistChip(
                             onClick = { },
-                            label = { Text("${p.añoLanzamiento}") },
-                            leadingIcon = { Icon(Icons.Filled.CalendarToday, contentDescription = "Año") }
+                            label = { Text(p.fechaLanzamiento) },
+                            leadingIcon = { Icon(Icons.Filled.DateRange, contentDescription = "Fecha") }
                         )
                     }
                     

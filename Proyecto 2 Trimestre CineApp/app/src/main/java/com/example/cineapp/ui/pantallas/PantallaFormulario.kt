@@ -51,11 +51,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.ui.input.pointer.pointerInput
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.ui.text.input.KeyboardType
 import coil.compose.AsyncImage
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.example.cineapp.data.Pelicula
 import com.example.cineapp.ui.viewmodel.CineViewModel
 
@@ -71,10 +76,13 @@ fun PantallaFormulario(
     var titulo by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var imagenUri by remember { mutableStateOf("") }
-    var duracionMinutos by remember { mutableIntStateOf(120) }
-    var añoLanzamiento by remember { mutableIntStateOf(2025) }
+    var duracionText by remember { mutableStateOf("120") }
+    var fechaLanzamiento by remember { mutableStateOf("") }
     var estaAlquilada by remember { mutableStateOf(false) }
     var formatoFisico by remember { mutableStateOf(true) }
+
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
 
     // Validacion visual
     val isTituloError = titulo.isBlank()
@@ -103,8 +111,8 @@ fun PantallaFormulario(
                     titulo = it.titulo
                     descripcion = it.descripcion
                     imagenUri = it.imagen
-                    duracionMinutos = it.duracionMinutos
-                    añoLanzamiento = it.añoLanzamiento
+                    duracionText = it.duracionMinutos.toString()
+                    fechaLanzamiento = it.fechaLanzamiento
                     estaAlquilada = it.estaAlquilada
                     formatoFisico = it.formatoFisico
                 }
@@ -118,12 +126,12 @@ fun PantallaFormulario(
                 title = { Text(if (peliculaId == 0) "Nueva Película" else "Editar Película", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onVolver) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver", tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -187,21 +195,57 @@ fun PantallaFormulario(
                 supportingText = { if (intentoGuardar && isDescripcionError) Text("La descripción debe tener al menos 10 caracteres") }
             )
 
-            // Stepper Duración
-            StepperInt(
-                label = "Duración (minutos)",
-                value = duracionMinutos,
-                onValueChange = { duracionMinutos = it },
-                range = 1..500
+            // Input Duración
+            OutlinedTextField(
+                value = duracionText,
+                onValueChange = { duracionText = it.filter { char -> char.isDigit() } },
+                label = { Text("Duración (minutos)") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = intentoGuardar && duracionText.isBlank(),
+                supportingText = { if (intentoGuardar && duracionText.isBlank()) Text("Introduce la duración") }
             )
 
-            // Stepper Año Lanzamiento
-            StepperInt(
-                label = "Año de Lanzamiento",
-                value = añoLanzamiento,
-                onValueChange = { añoLanzamiento = it },
-                range = 1900..2100
-            )
+            // Input Fecha Lanzamiento
+            Box(modifier = Modifier.fillMaxWidth().clickable { showDatePicker = true }) {
+                OutlinedTextField(
+                    value = fechaLanzamiento,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Fecha de Lanzamiento") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = false, // Previene enfoque de teclado
+                    colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledBorderColor = if (intentoGuardar && fechaLanzamiento.isBlank()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
+                        disabledLabelColor = if (intentoGuardar && fechaLanzamiento.isBlank()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
+            if (intentoGuardar && fechaLanzamiento.isBlank()) {
+                Text("Selecciona una fecha de lanzamiento", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            }
+
+            if (showDatePicker) {
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val date = Date(millis)
+                                val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                fechaLanzamiento = format.format(date)
+                            }
+                            showDatePicker = false
+                        }) { Text("Aceptar") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) { Text("Cancelar") }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
 
             // Toggle para Esta Alquilada
             Row(
@@ -237,14 +281,14 @@ fun PantallaFormulario(
             Button(
                 onClick = {
                     intentoGuardar = true
-                    if (!isTituloError && !isDescripcionError) {
+                    if (!isTituloError && !isDescripcionError && duracionText.isNotBlank() && fechaLanzamiento.isNotBlank()) {
                         val peliculaGuardada = Pelicula(
                             id = peliculaId,
                             titulo = titulo,
                             descripcion = descripcion,
                             imagen = imagenUri,
-                            duracionMinutos = duracionMinutos,
-                            añoLanzamiento = añoLanzamiento,
+                            duracionMinutos = duracionText.toIntOrNull() ?: 0,
+                            fechaLanzamiento = fechaLanzamiento,
                             estaAlquilada = estaAlquilada,
                             formatoFisico = formatoFisico
                         )
@@ -266,83 +310,4 @@ fun PantallaFormulario(
     }
 }
 
-@Composable
-fun StepperInt(
-    label: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    range: IntRange
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = label, style = MaterialTheme.typography.bodyLarge)
-        Row(verticalAlignment = Alignment.CenterVertically) {
 
-            // Botón de Restar
-            RepeatingIconButton(
-                onClick = { if (value > range.first) onValueChange(value - 1) },
-                icon = Icons.Filled.Remove,
-                contentDescription = "Restar"
-            )
-
-            Text(
-                text = value.toString(),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-            // Botón de Sumar
-            RepeatingIconButton(
-                onClick = { if (value < range.last) onValueChange(value + 1) },
-                icon = Icons.Filled.Add,
-                contentDescription = "Sumar"
-            )
-        }
-    }
-}
-
-@Composable
-fun RepeatingIconButton(
-    onClick: () -> Unit,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    contentDescription: String
-) {
-    val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
-
-    Box(
-        modifier = Modifier
-            .size(36.dp)
-            .clip(RoundedCornerShape(50))
-            .pointerInput(Unit) {
-                androidx.compose.foundation.gestures.awaitEachGesture {
-                    awaitPointerEvent(androidx.compose.ui.input.pointer.PointerEventPass.Main)
-                    // Primera pulsación ("clic" normal)
-                    onClick()
-
-                    val job = coroutineScope.launch {
-                        delay(400) // tiempo inicial para empezar a repetir
-                        while (true) {
-                            onClick()
-                            delay(50) // velocidad de incremento (cada 50ms)
-                        }
-                    }
-
-                    // Esperar a que suelte el botón
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        if (event.changes.any { !it.pressed }) {
-                            job.cancel()
-                            break
-                        }
-                    }
-                }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(icon, contentDescription = contentDescription, tint = MaterialTheme.colorScheme.primary)
-    }
-}

@@ -11,7 +11,7 @@ data class Pelicula(
     val descripcion: String,
     val imagen: String, // URI string
     val duracionMinutos: Int,
-    val añoLanzamiento: Int,
+    val fechaLanzamiento: String,
     val estaAlquilada: Boolean,
     val formatoFisico: Boolean
 )
