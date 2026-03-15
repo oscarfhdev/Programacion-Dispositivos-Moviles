@@ -1,6 +1,7 @@
 package com.example.casasapp.ui.pantallas
 
 import android.net.Uri
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -71,8 +73,16 @@ fun PantallaFormulario(navController: NavController, viewModel: CasasViewModel, 
         }
     }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) imagenUri = uri
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            // Pillamos el permiso permanente para que luego no pete al reiniciar
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            imagenUri = uri
+        }
     }
 
     Scaffold(
@@ -184,7 +194,7 @@ fun PantallaFormulario(navController: NavController, viewModel: CasasViewModel, 
 
             item {
                 OutlinedButton(
-                     onClick = { launcher.launch("image/*") },
+                     onClick = { launcher.launch(arrayOf("image/*")) },
                      modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                      shape = RoundedCornerShape(12.dp)
                 ) {
