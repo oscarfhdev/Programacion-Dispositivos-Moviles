@@ -92,6 +92,12 @@ class InventoryViewModelTest {
         // Simulamos que el repositorio tiene un dato inicial
         fakeRepository.updateProductStock(initialProduct)
 
+        // Iniciamos un colector en segundo plano. Esto engaña al 'SharingStarted.WhileSubscribed'
+        // del StateFlow del ViewModel haciéndole creer que la Vista se ha dibujado y está escuchando.
+        val job = kotlinx.coroutines.launch(kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.products.collect {}
+        }
+
         // Hacemos que el usuario reduzca el stock artificialmente desde el ViewModel (Interacción MVI/MVVM)
         viewModel.updateStock(initialProduct, 4)
         
@@ -100,7 +106,9 @@ class InventoryViewModelTest {
 
         // Testamos si Flow/StateFlow recogió un estado modificado con el número nuevo de stock
         val updatedProducts = viewModel.products.value
-        assertEquals(1, updatedProducts.size)
-        assertEquals(4, updatedProducts[0].quantity)
+        org.junit.Assert.assertEquals(1, updatedProducts.size)
+        org.junit.Assert.assertEquals(4, updatedProducts[0].quantity)
+        
+        job.cancel()
     }
 }
