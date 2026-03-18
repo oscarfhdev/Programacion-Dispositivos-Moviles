@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -94,7 +96,7 @@ class InventoryViewModelTest {
 
         // Iniciamos un colector en segundo plano. Esto engaña al 'SharingStarted.WhileSubscribed'
         // del StateFlow del ViewModel haciéndole creer que la Vista se ha dibujado y está escuchando.
-        val job = kotlinx.coroutines.launch(kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler)) {
+        val job = backgroundScope.launch(kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler)) {
             viewModel.products.collect {}
         }
 
