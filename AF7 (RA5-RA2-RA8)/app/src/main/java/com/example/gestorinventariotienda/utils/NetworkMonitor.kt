@@ -54,9 +54,9 @@ class NetworkMonitor @Inject constructor(
         val currentSsid = info.ssid?.replace("\"", "") ?: ""
         
         // Si no podemos obtenerlo por falta de permisos de GPS en Android modernos, 
-        // para efectos prácticos lo damos como válido si está en WiFi, para no bloquear el flujo.
+        // bloqueamos la descarga por seguridad, tal y como se solicita en los requisitos.
         if (currentSsid == "<unknown ssid>" || currentSsid.isBlank()) {
-           return true 
+           return false 
         }
 
         return currentSsid == savedSsid

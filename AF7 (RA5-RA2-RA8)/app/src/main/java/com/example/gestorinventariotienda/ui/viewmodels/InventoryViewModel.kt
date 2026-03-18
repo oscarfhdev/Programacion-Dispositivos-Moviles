@@ -53,8 +53,15 @@ class InventoryViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // 1. Obtenemos el SSID WiFi que la tienda exige desde DataStore.
+                // 1. Obtenemos el nombre y SSID WiFi de la tienda desde DataStore.
+                val storeName = settingsManager.storeNameFlow.first()
                 val requiredSsid = settingsManager.storeWifiSsidFlow.first()
+
+                // Verificamos que el usuario haya configurado previamente la app
+                if (storeName.isBlank() || requiredSsid.isBlank()) {
+                    _uiMessage.value = "Error: Configura primero el Nombre de la Tienda y el SSID de la Wi-Fi en Ajustes."
+                    return@launch
+                }
 
                 // 2. Verificamos la conexión
                 if (!networkMonitor.isConnected()) {
