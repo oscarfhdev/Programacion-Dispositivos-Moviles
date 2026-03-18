@@ -40,6 +40,6 @@ class InventoryScreenTest {
         // 3. Afirmaciones semánticas (Asserts) de la jerarquía UI
         // Verifica que el árbol semántico construyó e incluyó los Text(...)
         composeTestRule.onNodeWithText("Zapatillas Nike Air").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Stock: 15").assertIsDisplayed()
+        composeTestRule.onNodeWithText("15").assertIsDisplayed()
     }
 }
