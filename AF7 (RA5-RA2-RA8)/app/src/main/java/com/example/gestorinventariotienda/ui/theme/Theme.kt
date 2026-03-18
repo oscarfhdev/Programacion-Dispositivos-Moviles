@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryIndigo,
+    primary = PrimaryStockMatic,
     onPrimary = OnPrimaryWhite,
     primaryContainer = PrimaryContainer,
     onPrimaryContainer = OnPrimaryContainer,
-    secondary = SecondaryTeal,
+    secondary = SecondaryStockMatic,
     onSecondary = OnSecondaryWhite,
     secondaryContainer = SecondaryContainer,
     onSecondaryContainer = OnSecondaryContainer,
@@ -27,11 +27,11 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryIndigo,
+    primary = PrimaryStockMatic,
     onPrimary = OnPrimaryWhite,
     primaryContainer = PrimaryContainer,
     onPrimaryContainer = OnPrimaryContainer,
-    secondary = SecondaryTeal,
+    secondary = SecondaryStockMatic,
     onSecondary = OnSecondaryWhite,
     secondaryContainer = SecondaryContainer,
     onSecondaryContainer = OnSecondaryContainer,
@@ -44,8 +44,9 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun GestorInventarioTiendaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Para que los colores corporativos de "StockMatic" se vean siempre,
+    // desactivamos por defecto el dynamicColor basado en el Wallpaper del usuario.
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

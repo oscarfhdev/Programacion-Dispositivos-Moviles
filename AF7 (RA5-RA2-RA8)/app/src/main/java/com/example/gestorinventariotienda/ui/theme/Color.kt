@@ -2,16 +2,16 @@ package com.example.gestorinventariotienda.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Paleta Premium (Clara/Oscura)
-val PrimaryIndigo = Color(0xFF4F46E5) // Azul-Índigo vibrante
+// Paleta StockMatic (Extraída de logo.png)
+val PrimaryStockMatic = Color(0xFF155265) // Teal Obscuro / Azul Prusia
 val OnPrimaryWhite = Color(0xFFFFFFFF)
-val PrimaryContainer = Color(0xFFE0E7FF)
-val OnPrimaryContainer = Color(0xFF312E81)
+val PrimaryContainer = Color(0xFFD3E3EC) // Azul cielo muy pálido para contenedores
+val OnPrimaryContainer = Color(0xFF0F3A48) // Aún más oscuro que el primario
 
-val SecondaryTeal = Color(0xFF0D9488) // Verde-Teal esmeralda
-val OnSecondaryWhite = Color(0xFFFFFFFF)
-val SecondaryContainer = Color(0xFFCCFBF1)
-val OnSecondaryContainer = Color(0xFF115E59)
+val SecondaryStockMatic = Color(0xFFAFB2B7) // Plata / Gris Azulado del logo
+val OnSecondaryWhite = Color(0xFF000000) 
+val SecondaryContainer = Color(0xFFE5E7EB)
+val OnSecondaryContainer = Color(0xFF374151)
 
 val BackgroundLight = Color(0xFFF9FAFB)
 val SurfaceLight = Color(0xFFFFFFFF)
