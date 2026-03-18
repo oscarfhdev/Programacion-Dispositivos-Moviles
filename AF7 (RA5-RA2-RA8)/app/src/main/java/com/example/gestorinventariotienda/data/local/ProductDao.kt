@@ -1,6 +1,7 @@
 package com.example.gestorinventariotienda.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -22,6 +23,10 @@ interface ProductDao {
     // Permite actualizar un producto en particular (por ejemplo, al cambiar su stock desde la UI).
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateProduct(product: ProductEntity)
+
+    // Elimina un producto específico de la base de datos.
+    @Delete
+    suspend fun deleteProduct(product: ProductEntity)
 
     // Borramos todos los productos para poder recargar desde la API de cero si la tienda lo requiere.
     @Query("DELETE FROM products")

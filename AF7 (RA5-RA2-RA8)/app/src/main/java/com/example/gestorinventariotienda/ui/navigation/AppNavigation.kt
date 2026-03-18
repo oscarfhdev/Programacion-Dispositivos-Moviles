@@ -32,12 +32,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.gestorinventariotienda.ui.screens.DashboardScreen
 import com.example.gestorinventariotienda.ui.screens.InventoryScreen
+import com.example.gestorinventariotienda.ui.screens.PdfListScreen
+import com.example.gestorinventariotienda.ui.screens.PdfViewerScreen
 import com.example.gestorinventariotienda.ui.screens.SettingsScreen
+import androidx.compose.material.icons.filled.PictureAsPdf
 
 // Rutas selladas para evitar errores tipográficos al navegar
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Inventory : Screen("inventory", "Inventario", Icons.Default.List)
     object Dashboard : Screen("dashboard", "Panel", Icons.Default.BarChart)
+    object PdfList : Screen("pdf_list", "Reportes", Icons.Default.PictureAsPdf)
     object Settings : Screen("settings", "Ajustes", Icons.Default.Settings)
 }
 
@@ -50,6 +54,7 @@ fun AppNavigation() {
     val items = listOf(
         Screen.Inventory,
         Screen.Dashboard,
+        Screen.PdfList,
         Screen.Settings
     )
 
@@ -101,6 +106,17 @@ fun AppNavigation() {
             // Cuando la ruta sea 'settings', pinta SettingsScreen
             composable(Screen.Settings.route) {
                 SettingsScreen()
+            }
+            
+            // Ruta para la lista de PDFs
+            composable(Screen.PdfList.route) {
+                PdfListScreen(navController = navController)
+            }
+            
+            // Ruta para el visor de un PDF concreto (pasando el nombre por URL)
+            composable("pdf_viewer/{fileName}") { backStackEntry ->
+                val fileName = backStackEntry.arguments?.getString("fileName") ?: ""
+                PdfViewerScreen(fileName = fileName, onBack = { navController.popBackStack() })
             }
         }
     }

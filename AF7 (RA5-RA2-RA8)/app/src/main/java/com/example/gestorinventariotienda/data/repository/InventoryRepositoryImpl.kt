@@ -56,6 +56,11 @@ class InventoryRepositoryImpl @Inject constructor(
         productDao.updateProduct(product)
     }
 
+    // Borramos un producto de Room.
+    override suspend fun deleteProduct(product: ProductEntity) {
+        productDao.deleteProduct(product)
+    }
+
     // Creamos y guardamos una nueva incidencia.
     override suspend fun reportIncident(description: String) {
         val incident = IncidentReportEntity(description = description)

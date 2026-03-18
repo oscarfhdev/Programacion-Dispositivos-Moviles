@@ -18,6 +18,9 @@ interface InventoryRepository {
     // Actualizamos la cantidad de stock de un producto específico.
     suspend fun updateProductStock(product: ProductEntity)
 
+    // Borramos un producto específico de la base de datos local.
+    suspend fun deleteProduct(product: ProductEntity)
+
     // Agregamos una nueva incidencia al buzón.
     suspend fun reportIncident(description: String)
 

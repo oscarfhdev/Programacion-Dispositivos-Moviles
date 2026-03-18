@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Remove
@@ -123,6 +124,9 @@ fun InventoryScreen(
                             onStockUpdate = { newStock ->
                                 // Llamamos a actualizar dentro de Room
                                 viewModel.updateStock(product, newStock)
+                            },
+                            onDelete = {
+                                viewModel.deleteProduct(product)
                             }
                         )
                     }
@@ -136,16 +140,17 @@ fun InventoryScreen(
 @Composable
 fun ProductItem(
     product: ProductEntity,
-    onStockUpdate: (Int) -> Unit
+    onStockUpdate: (Int) -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        // Si hay poco stock ponemos el fondo rojizo como alerta visual
+        // Si hay poco stock ponemos el fondo de alerta respetando Light/Dark mode
         colors = CardDefaults.cardColors(
-            containerColor = if (product.quantity < 5) Color(0xFFFFEBEE) else MaterialTheme.colorScheme.surface
+            containerColor = if (product.quantity < 5) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -191,6 +196,11 @@ fun ProductItem(
                 Text(text = "${product.quantity}", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                 IconButton(onClick = { onStockUpdate(product.quantity + 1) }) {
                     Icon(Icons.Default.Add, contentDescription = "Aumentar", tint = MaterialTheme.colorScheme.primary)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                // Botón de eliminar
+                IconButton(onClick = { onDelete() }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
                 }
             }
         }

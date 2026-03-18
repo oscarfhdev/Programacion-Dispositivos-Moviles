@@ -121,4 +121,12 @@ class InventoryViewModel @Inject constructor(
             }
         }
     }
+
+    // Función para borrar un producto del inventario local
+    fun deleteProduct(product: ProductEntity) {
+        viewModelScope.launch {
+            repository.deleteProduct(product)
+            _uiMessage.value = "Producto eliminado: ${product.title}"
+        }
+    }
 }

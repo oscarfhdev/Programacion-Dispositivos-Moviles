@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -23,14 +25,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gestorinventariotienda.ui.viewmodels.SettingsViewModel
@@ -43,13 +48,20 @@ import java.util.Locale
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    // Escuchamos DataStore y la lista de incidencias
     val storeName by viewModel.storeName.collectAsState()
     val storeSsid by viewModel.storeWifiSsid.collectAsState()
     val incidents by viewModel.incidentsFlow.collectAsState()
 
-    // Controla si se muestra la ventana flotante del buzón
+    // Estado local del campo de nombre: solo se escribe en DataStore al salir del campo
+    var localStoreName by remember { mutableStateOf(storeName) }
+    var localStoreSsid by remember { mutableStateOf(storeSsid) }
+
+    // Sincroniza el estado local la primera vez que llegan los datos de DataStore
+    LaunchedEffect(storeName) { if (localStoreName != storeName) localStoreName = storeName }
+    LaunchedEffect(storeSsid) { if (localStoreSsid != storeSsid) localStoreSsid = storeSsid }
+
     var showIncidentDialog by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text("Ajustes y Buzón", fontWeight = FontWeight.Bold) }) }
@@ -67,33 +79,58 @@ fun SettingsScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Configuración", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                    Text(
+                        "Configuración",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Campo para el nombre de la tienda
+                    // Estado local que solo persiste al salir del campo (onFocusChanged)
                     OutlinedTextField(
-                        value = storeName,
-                        onValueChange = { viewModel.updateStoreName(it) },
+                        value = localStoreName,
+                        onValueChange = { localStoreName = it }, // Solo actualiza estado local
                         label = { Text("Nombre de la tienda") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { focus ->
+                                // Guardamos en DataStore únicamente al perder el foco
+                                if (!focus.isFocused) viewModel.updateStoreName(localStoreName)
+                            },
+                        shape = RoundedCornerShape(8.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            viewModel.updateStoreName(localStoreName)
+                            focusManager.clearFocus()
+                        })
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Campo para la WiFi requerida
                     OutlinedTextField(
-                        value = storeSsid,
-                        onValueChange = { viewModel.updateWifiSsid(it) },
+                        value = localStoreSsid,
+                        onValueChange = { localStoreSsid = it }, // Solo actualiza estado local
                         label = { Text("SSID Wi-Fi Requerida para Descargas") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { focus ->
+                                // Guardamos en DataStore únicamente al perder el foco
+                                if (!focus.isFocused) viewModel.updateWifiSsid(localStoreSsid)
+                            },
+                        shape = RoundedCornerShape(8.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            viewModel.updateWifiSsid(localStoreSsid)
+                            focusManager.clearFocus()
+                        })
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón para reportar incidencias (Abre el AlertDialog)
             Button(
                 onClick = { showIncidentDialog = true },
                 modifier = Modifier
@@ -108,9 +145,12 @@ fun SettingsScreen(
             Text("Historial de Incidencias", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Lista del historial de incidencias que vienen de Room
             if (incidents.isEmpty()) {
-                Text("No hay incidencias registradas.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    "No hay incidencias registradas.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -123,10 +163,14 @@ fun SettingsScreen(
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text(incident.description, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyLarge)
+                                Text(
+                                    incident.description,
+                                    fontWeight = FontWeight.SemiBold,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
                                 Spacer(modifier = Modifier.height(6.dp))
-                                // Formateamos el timestamp a fecha legible
-                                val date = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(incident.timestamp))
+                                val date = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                                    .format(Date(incident.timestamp))
                                 Text(date, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                             }
                         }
@@ -136,10 +180,9 @@ fun SettingsScreen(
         }
     }
 
-    // Modal Flotante (Popup) para introducir el error
     if (showIncidentDialog) {
         var incidentText by remember { mutableStateOf("") }
-        
+
         AlertDialog(
             onDismissRequest = { showIncidentDialog = false },
             title = { Text("Nueva Incidencia", fontWeight = FontWeight.Bold) },
