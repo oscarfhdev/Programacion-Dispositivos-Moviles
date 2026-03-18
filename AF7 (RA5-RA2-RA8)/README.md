@@ -1,4 +1,4 @@
-# 📦 Gestor de Inventario de Tienda
+# 📦 StockMatic
 
 > Aplicación móvil Android para la gestión de inventario en tiempo real, desarrollada con **Kotlin**, **Jetpack Compose** y **Clean Architecture**.
 
@@ -6,7 +6,7 @@
 
 ## 📋 Descripción General
 
-**Gestor de Inventario** es una aplicación Android diseñada para que el personal de una tienda minorista pueda controlar su catálogo de productos directamente desde el móvil. Permite sincronizar productos desde una API REST, gestionar el stock de forma local, generar informes en PDF, visualizar estadísticas y reportar incidencias, todo con soporte offline gracias a base de datos local.
+**StockMatic** es una aplicación Android diseñada para que el personal de una tienda minorista pueda controlar su catálogo de productos directamente desde el móvil. Permite sincronizar productos desde una API REST, gestionar el stock de forma local, generar informes en PDF, visualizar estadísticas y reportar incidencias, todo con soporte offline gracias a base de datos local.
 
 ---
 

@@ -1,6 +1,6 @@
 # Documento de Entrada: Diseño de Pruebas
 
-**Proyecto:** Gestor de Inventario de Tienda (AF7 - Desarrollo de App Móvil)  
+**Proyecto:** StockMatic (AF7 - Desarrollo de App Móvil)  
 **Autor/a:** Óscar Fernández Herrera  
 **Módulos:** Programación Multimedia y Dispositivos Móviles (RA2) / Desarrollo de Interfaces (RA5, RA8)  
 **Fecha:** Marzo 2026  
@@ -8,7 +8,7 @@
 ---
 
 ## 1. Introducción
-El presente documento tiene por objetivo definir los escenarios, casos de uso y protocolos de evaluación que garanticen la estabilidad, seguridad y usabilidad del "Gestor de Inventario Tienda". Las pruebas están diseñadas para ejecutarse tanto en emuladores como en dispositivos físicos, cubriendo los requerimientos exigidos en la rúbrica AF7.
+El presente documento tiene por objetivo definir los escenarios, casos de uso y protocolos de evaluación que garanticen la estabilidad, seguridad y usabilidad de "StockMatic". Las pruebas están diseñadas para ejecutarse tanto en emuladores como en dispositivos físicos, cubriendo los requerimientos exigidos en la rúbrica AF7.
 
 ---
 
@@ -46,3 +46,12 @@ El presente documento tiene por objetivo definir los escenarios, casos de uso y 
 |:---:|---|---|---|
 | **SEG-01** | **Verificación Estricta Wi-Fi:** Asegurar protección contra redes no autorizadas. | 1. Desconectar de la Red SSID de Tienda o estar en Datos 4G.<br>2. Intentar pulsar "Descargar". | El puente de `InventoryViewModel` rechaza instantáneamente la conexión, denegando el gasto de datos y mostrando error "Configura SSID... / WiFI no coincide". |
 | **SEG-02** | **Protección de Runtime Permissions:** Evitar "Unknown SSID" exploit desactivando la geolocalización. | 1. Apagar el servicio de GPS (Ubicación) en el smartphone pero mantener WiFi conectado.<br>2. Darle a sincronizar. | Ante la lectura abstracta de `<unknown ssid>` que eluden dispositivos >= Android 8 por motivos de privacidad, la App aborta y devuelve "Falso" por seguridad, forzando la aprobación de ubicación explicita del usuario para certificar el SSID real. |
+
+### 2.5. Pruebas Automatizadas (Unit & UI Testing)
+**Objetivo:** Asegurar la ausencia de fallos humanos validando los flujos de código mediante la API de testing de Android (JUnit y Compose UI).
+
+| ID Prueba | Descripción del Escenario | Pasos de Ejecución | Resultado Esperado |
+|:---:|---|---|---|
+| **AUT-01** | **Persistencia In-Memory (Room):** Comprobar inserción del `ProductDao`. | Ejecutar `ProductDaoTest.kt` alojado en `androidTest`. El Test levanta BDD temporal insertando producto Dummy. | El Test (`assertEquals`) confirma que el DAO recupera exactamente lo recién insertado devolviendo `PASSED`. |
+| **AUT-02** | **Aislamiento MVVM (ViewModel):** Simular el repositorio de datos backend. | Ejecutar `InventoryViewModelTest.kt`. El framework inyecta un Repo Falso usando `kotlinx-coroutines-test` y modifica el Stock. | El `StateFlow` reactivo detecta la actualización sin crashear el motor, validado con `assertEquals` retornando `PASSED`. |
+| **AUT-03** | **Jerarquía Semántica UI (Compose):** Simular el renderizado de Pantalla. | Ejecutar `InventoryScreenTest.kt`. Se expone el Componente Visual UI aislado. | Compose escanea su propio árbol y `assertIsDisplayed` encuentra el Título y Cantidad en pantalla retornando `PASSED`. |

@@ -1,6 +1,6 @@
 # Documento de Salida: Resultados de Pruebas
 
-**Proyecto:** Gestor de Inventario de Tienda (AF7 - Desarrollo de App Móvil)  
+**Proyecto:** StockMatic (AF7 - Desarrollo de App Móvil)  
 **Autor/a:** Óscar Fernández Herrera  
 **Módulos:** Programación Multimedia y Dispositivos Móviles (RA2) / Desarrollo de Interfaces (RA5, RA8)  
 **Entorno de Ejecución:** Emulador Android Studio (Pixel 6 Pro - API 34) & Dispositivo Realme Físico  
@@ -10,7 +10,7 @@
 
 ## 1. Veredicto General
 
-Tras la ejecución de las fases descritas en el **Documento de Entrada**, la aplicación *Gestor de Inventario Tienda* ha superado los benchmarks y escenarios previstos con una **Tasa de Éxito del 100%**. No se han hallado vulnerabilidades críticas (Nivel 1), bloqueos de hilo principal (ANR), ni fugas de memoria remarcables al manejar reportes interinos en alto formato Bitmap.
+Tras la ejecución de las fases descritas en el **Documento de Entrada**, la aplicación *StockMatic* ha superado los benchmarks y escenarios previstos con una **Tasa de Éxito del 100%**. No se han hallado vulnerabilidades críticas (Nivel 1), bloqueos de hilo principal (ANR), ni fugas de memoria remarcables al manejar reportes interinos en alto formato Bitmap.
 
 ---
 
@@ -45,7 +45,15 @@ Tras la ejecución de las fases descritas en el **Documento de Entrada**, la apl
 | **SEG-01 (Condición de Sincronía)**| [Auto] | Dispo. Físico | **PASA ✅** | Descarga abortada rotundamente ante falta de parámetros de SSID o ante intento vía 4G. El sistema de red del `NetworkMonitor` detiene la lógica HTTP eficientemente ahorrando procesado innecesario. |
 | **SEG-02 (Mitigación Bypass Privacidad)** | [Auto] | Dispo. Físico | **PASA ✅** | Android enmascara SSID de las aplicaciones en versiones grandes a `<unknown ssid>` si el GPS está off. El algoritmo ha superado la prueba de seguridad negándose a aceptar esta máscara como coartada de validación, forzando la localización habilitada. |
 
+### 2.5. Pruebas Automatizadas (Tasa Éxito: 3/3 Válidas)
+
+| ID Prueba | Fecha / Hora | Entorno | Estado Real | Comentarios y Observaciones del Desarrollador |
+|:---:|---|---|:---:|---|
+| **AUT-01 (Room In-Memory)** | [Auto] | API 34 | **PASA ✅** | El InstrumentedTest levantó la BDD en RAM, guardó la Zapatilla Dummy y el Assert confirmó 100% de coincidencia de atributos DAO sin degradación. |
+| **AUT-02 (ViewModel Mock)** | [Auto] | Local JVM | **PASA ✅** | Se ejecutó el despachador de JVM. El FakeRepository respondió correctamente al ViewModel y el StateFlow modificó el Stock Counts a 4 superando el UnitTest velozmente. |
+| **AUT-03 (Compose UI Flow)**| [Auto] | API 34 | **PASA ✅** | El ComposeTestRule dibujó la UI State-less, el escáner nativo detectó el texto en la Tarjeta de producto exitosamente. Compose UI Test funcional. |
+
 ---
 
 ## 3. Conclusión
-La arquitectura del _Gestor de Inventario_ no solamente soporta y ejecuta sus funciones estipuladas según el Documento de Entrada, sino que resulta altamente mantenible y segura, certificando un nivel de **Calidad del Software Final** apto y digno para lanzamiento en entornos de pre-producción.
+La arquitectura de _StockMatic_ no solamente soporta y ejecuta sus funciones estipuladas según el Documento de Entrada, sino que resulta altamente mantenible y segura, certificando un nivel de **Calidad del Software Final** apto y digno para lanzamiento en entornos de pre-producción.
