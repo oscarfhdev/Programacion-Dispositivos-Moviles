@@ -207,7 +207,7 @@ git clone https://github.com/oscarfhdev/Programacion-Dispositivos-Moviles.git
 
 ## 👨‍💻 Autor
 
-**Óscar Fernández Herrera**  
+**Óscar Fernández Hernández**  
 2º DAM — IES Antonio Gala (Palma del Río)  
 Módulo: Programación Multimedia y Dispositivos Móviles + Desarrollo de Interfaces
 
@@ -215,4 +215,4 @@ Módulo: Programación Multimedia y Dispositivos Móviles + Desarrollo de Interf
 
 ## 📜 Licencia
 
-Este proyecto ha sido desarrollado con fines educativos para la Actividad Final 7 (AF7) del CFGS de Desarrollo de Aplicaciones Multiplataforma.
+Este proyecto ha sido desarrollado con fines educativos para la Actividad Final 7 (AF7) del CFGS de Desarrollo de Aplicaciones Multiplataforma y Desarollo de Interfaces.

@@ -1,7 +1,7 @@
 # Documento de Salida: Resultados de Pruebas
 
 **Proyecto:** StockMatic (AF7 - Desarrollo de App Móvil)  
-**Autor/a:** Óscar Fernández Herrera  
+**Autor/a:** Óscar Fernández Hernández  
 **Módulos:** Programación Multimedia y Dispositivos Móviles (RA2) / Desarrollo de Interfaces (RA5, RA8)  
 **Entorno de Ejecución:** Emulador Android Studio (Pixel 6 Pro - API 34) & Dispositivo Realme Físico  
 **Fecha de Ejecución:** Marzo 2026  
